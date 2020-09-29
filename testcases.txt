@@ -1,0 +1,109 @@
+The following contains some of the cases used to test our client and server applications.
+Before running these sequences, the executables should be generated with make.
+
+1)
+
+The following sequence of commands are what we used in the test case specified in our WTFTest executable. 
+In a successful test, the client should make a project called "proj", add 2 entries for files, remove one, then commit & push it to the server. 
+The client then retrieves the server's history file containing a history of all successful pushes.
+Then the client's project folder is deleted and reinitialized, and the client retrieves the latest copy from the server via the update and upgrade commands.
+
+./WTF configure localhost 3000
+./WTFServer 3000
+./WTF create proj
+./WTF add proj file1.txt
+./WTF add proj file2.txt
+./WTF remove proj file1.txt
+./WTF commit proj
+./WTF push proj
+./WTF history proj
+rm proj/.Manifest
+touch proj/.Manifest
+chmod 777 proj/.Manifest
+echo -e "0" > proj/.Manifest
+./WTF update proj
+./WTF upgrade proj
+
+2)
+
+This next test sequence is designed to run on an ilab server with port number 8000. 
+The client creates a new project called Eshaan and adds 3 files, then removing 1 from the manifest.
+Project "Eshaan" is then committed and pushed onto the server.
+Project "Eshaan" is then deleted from the client side and retrieved using the checkout command.
+The client side then removes a file and receives the latest version from the server using update and upgrade
+
+
+./WTFServer 8000
+./WTF ilab.cs.rutgers.edu 8000
+./WTF create Eshaan
+cat .Manifest
+touch Eshaan/test1
+touch Eshaan/test2
+touch Eshaan/test3
+./WTF add Eshaan test1
+./WTF add Eshaan test2
+./WTF add Eshaan test3
+./WTF remove Eshaan test2
+./WTF commit Eshaan
+./WTF push Eshaan
+rm -f Eshaan
+./WTF checkout Eshaan
+ls -la Eshaan
+rm Eshaan/test1
+./WTF update Eshaan
+./WTF upgrade Eshaan
+
+3)
+
+This next test sequence demonstrates a Modify case for a commit.
+The client creates a new project "Mike" and adds a file, and a corresponding entry in the .Manifest
+The client commits and pushes the project.
+The contents of the file in the project directory is then changed. In the following commit, a Modify operation is signaled in STDOUT, and the change is reflected in the .Manifest in the 
+entry's hashcode.
+The project is then committed and pushed to the server, and the client receives a history file from the server showing the operations of both pushes.
+
+
+./WTFServer 3000
+./WTF java.cs.rutgers.edu 3000
+./WTF create Mike
+cat .Manifest
+touch Mike/test1
+./WTF add Mike test1
+./WTF commit Mike
+cat .Manifest
+./WTF push Mike
+echo "testing" > Mike/test1
+./WTF commit Mike
+cat .Manifest
+./WTF push Mike
+./WTF history Mike
+
+4)
+
+This next test sequence demonstrates a Modify case for a commit.
+The client creates a new project "Mike" and adds a file, and a corresponding entry in the .Manifest
+The client commits and pushes the project.
+The file in the project directory is then deleted, along with its entry in the .Manifest. In the following commit, a Delete operation is signaled in STDOUT.
+The project is then committed and pushed to the server, and the client receives a history file from the server showing the operations of both pushes.
+
+./WTFServer 3000
+./WTF java.cs.rutgers.edu 3000
+./WTF create Mike
+cat .Manifest
+touch Mike/test1
+./WTF add Mike test1
+./WTF commit Mike
+cat .Manifest
+./WTF push Mike
+rm Mike/test1
+./WTF remove Mike test1
+./WTF commit Mike
+cat .Manifest
+./WTF push Mike
+./WTF history Mike
+
+
+
+
+
+
