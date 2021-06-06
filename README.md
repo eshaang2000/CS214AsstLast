@@ -1,8 +1,7 @@
 # Where’s the file? (WTF)
 
 Authors:
-Michael Ziegler
-Eshaan Gandhi
+Michael Ziegler and Eshaan Gandhi
 
 WTFServer and WTF are a server and client that are used for version control. There are a variety
 of different things, you can do with this server in terms of file version control.
